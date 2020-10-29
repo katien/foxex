@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon index.ts",
+    "bittrex": "ts-node orderbook/bittrex.ts",
     "build": "tsc --project ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bittrex-signalr-client": "^1.1.10",
     "express": "4.17.1"
   },
   "devDependencies": {

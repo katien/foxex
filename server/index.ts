@@ -1,5 +1,6 @@
 import express from 'express';
-import {startListeners} from './connectionManager';
+import {ConnectionManager} from './connectionManager';
+import {Bittrex} from "./orderbook/bittrex";
 // rest of the code remains same
 const app = express();
 const PORT = 3000;
@@ -10,6 +11,6 @@ let server = app.listen(PORT, () => {
 });
 
 const io = require('socket.io')(server);
-
-startListeners(io);
+const bittrex = new Bittrex();
+const connectionManager = new ConnectionManager(io, bittrex);
 
