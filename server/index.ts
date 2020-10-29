@@ -1,5 +1,5 @@
 import express from 'express';
-import {ConnectionManager} from './connectionManager';
+import {BrowserConnectionManager} from './browserConnectionManager';
 import {Bittrex} from "./orderbook/bittrex";
 // rest of the code remains same
 const app = express();
@@ -12,5 +12,5 @@ let server = app.listen(PORT, () => {
 
 const io = require('socket.io')(server);
 const bittrex = new Bittrex();
-const connectionManager = new ConnectionManager(io, bittrex);
+const connectionManager = new BrowserConnectionManager(io, bittrex);
 
