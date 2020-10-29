@@ -30,7 +30,10 @@
       return {
         pairs: ["BTC_ETH", "BTC_DOGE"],
         currentPair: null,
-        orderBook: {},
+        orderBook: {
+          bid: {},
+          ask: {}
+        },
         socket: io("localhost:3000")
       };
     },
@@ -47,14 +50,15 @@
       });
       this.socket.on("orderBookLoaded", (orderBook: OrderBook) => {
         console.log(`orderBookLoaded\n${JSON.stringify(orderBook)}`);
-        this.orderBook = orderBook;
+
+        Vue.set(this.$data, "orderBook", orderBook);
       });
     }
   });
 
   export interface OrderBook {
-    bid: { [price: number]: number };
-    ask: { [price: number]: number };
+    bid: { [price: string]: number };
+    ask: { [price: string]: number };
   }
 
 </script>
@@ -67,5 +71,6 @@
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
+    font-size: 12px;
   }
 </style>
