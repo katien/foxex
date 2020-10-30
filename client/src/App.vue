@@ -50,7 +50,6 @@
       });
       this.socket.on("orderBookLoaded", (orderBook: OrderBook) => {
         console.log(`orderBookLoaded\n${JSON.stringify(orderBook)}`);
-
         Vue.set(this.$data, "orderBook", orderBook);
       });
     }

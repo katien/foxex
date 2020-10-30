@@ -21,7 +21,6 @@ export class OrderBook {
       this.ask[rate] = total;
     else
       delete this.ask[rate];
-
   }
 }
 

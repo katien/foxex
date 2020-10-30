@@ -9,6 +9,10 @@ export class CombinedOrderBook {
     this.poloniexOrderBook = poloniexOrderBook;
   }
 
+  get asOrderBook(): OrderBook {
+    return new OrderBook(this.bittrexOrderBook?.bid || {}, this.bittrexOrderBook?.ask || {})
+  }
+
   get combinedBids(): Totals {
     return this.bittrexOrderBook?.bid || {}; // + this.poloniexOrderBook.bid
   }

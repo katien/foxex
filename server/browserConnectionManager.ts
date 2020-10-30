@@ -40,6 +40,6 @@ export class BrowserConnectionManager {
    * broadcasts updated order book to relevant room
    * */
   orderBookUpdateHandler = (pair: CurrencyPair) => {
-    this.io.to(pair).emit('orderBookLoaded', this.orderBookService.books[pair]);
+    this.io.to(pair).emit('orderBookLoaded', this.orderBookService.books[pair].asOrderBook || {});
   }
 }
