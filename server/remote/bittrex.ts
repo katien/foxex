@@ -1,6 +1,7 @@
 import {OrderBook, Totals} from "../orderbook/OrderBook";
 import {SignalRClient} from "../types/SignalRClient";
 import {BittrexResponse} from "../types/BittrexResponse";
+import {CurrencyPair} from "../types/CurrencyPair";
 
 const BittrexClient = require('bittrex-signalr-client');
 
@@ -9,7 +10,7 @@ export class Bittrex {
   /**
    * Invoked after the order book for a currency pair has been updated to notify observers
    * */
-  onOrderBookUpdate?: (pair: string) => void
+  onChange?: (pair: CurrencyPair) => void
 
   /**
    * Level of precision to allow in order books
@@ -21,8 +22,8 @@ export class Bittrex {
    * lateinit
    * TODO: handle missing order book/reload
    * */
-  BTC_ETH?: OrderBook;
-  BTC_DOGE?: OrderBook;
+  readonly BTC_ETH: OrderBook = new OrderBook({}, {});
+  readonly BTC_DOGE: OrderBook = new OrderBook({}, {});
 
   private client: SignalRClient;
 
@@ -50,11 +51,11 @@ export class Bittrex {
   orderBookLoadListener = (response: BittrexResponse) => {
     let orderBook = this.parseBittrexResponseToOrderBook(response);
     if (response.pair === "BTC-ETH") {
-      this.BTC_ETH = orderBook;
+      Object.assign(this.BTC_ETH, orderBook);
       console.log(`BTC_ETH orderBookLoaded:\n${JSON.stringify(this.BTC_ETH)}`);
     } else if (response.pair === "BTC-DOGE") {
       console.log(`orderBookLoaded:\n${JSON.stringify(response)}`);
-      this.BTC_DOGE = orderBook;
+      Object.assign(this.BTC_DOGE, orderBook);
       console.log(`BTC_ETH orderBookLoaded:\n${JSON.stringify(this.BTC_DOGE)}`);
     }
   }
@@ -69,15 +70,18 @@ export class Bittrex {
       if (this.BTC_ETH) {
         this.processUpdate(response, this.BTC_ETH);
         console.log(`BTC_ETH orderBookUpdate:\n${JSON.stringify(response)}`);
-        this.onOrderBookUpdate?.("BTC_ETH");
+        this.orderBookUpdateHandler(CurrencyPair.BTC_ETH);
       }
     } else if (response.pair === "BTC-DOGE") {
       if (this.BTC_DOGE) {
         this.processUpdate(response, this.BTC_DOGE);
         console.log(`BTC_DOGE orderBookUpdate:\n${JSON.stringify(response)}`);
-        this.onOrderBookUpdate?.("BTC_DOGE");
+        this.orderBookUpdateHandler(CurrencyPair.BTC_DOGE);
       }
     }
+  }
+  orderBookUpdateHandler = (pair: CurrencyPair) => {
+    this.onChange?.(pair);
   }
 
   private parseBittrexResponseToOrderBook(response: BittrexResponse): OrderBook {

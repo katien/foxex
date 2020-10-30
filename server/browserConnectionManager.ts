@@ -1,14 +1,15 @@
 import sio from 'socket.io';
-import {Bittrex} from "./remote/bittrex";
+import {OrderBookService} from "./orderbook/OrderBookService";
+import {CurrencyPair} from "./types/CurrencyPair";
 
 export class BrowserConnectionManager {
-  bittrex: Bittrex
+  orderBookService: OrderBookService
   io: sio.Server
 
-  constructor(io: sio.Server, bittrex: Bittrex) {
+  constructor(io: sio.Server, orderBookManager: OrderBookService) {
     this.io = io;
-    this.bittrex = bittrex;
-    this.bittrex.onOrderBookUpdate = this.orderBookUpdateHandler;
+    this.orderBookService = orderBookManager;
+    this.orderBookService.onChange = this.orderBookUpdateHandler;
     this.startListeners();
   }
 
@@ -23,12 +24,11 @@ export class BrowserConnectionManager {
         for (let room in socket.rooms) {
           if (room != socket.id) socket.leave(room);
         }
-        socket.join(pair);
-        // immediately dispatch order book for subscribed pair
-        if (pair === "BTC_ETH") {
-          this.io.to(socket.id).emit('orderBookLoaded', this.bittrex.BTC_ETH);
-        } else if (pair === "BTC_DOGE") {
-          this.io.to(socket.id).emit('orderBookLoaded', this.bittrex.BTC_DOGE);
+        const subscribedPair: CurrencyPair | undefined = (<any>CurrencyPair)[pair];
+        if (subscribedPair) {
+          socket.join(pair);
+          // immediately dispatch order book for subscribed pair
+          this.io.to(socket.id).emit('orderBookLoaded', this.orderBookService.books[subscribedPair]);
         }
       });
     });
@@ -39,10 +39,7 @@ export class BrowserConnectionManager {
    * triggered each time an update is pushed for an order book
    * broadcasts updated order book to relevant room
    * */
-  orderBookUpdateHandler = (pair: string) => {
-    if (pair === "BTC_ETH")
-      this.io.to("BTC_ETH").emit('orderBookLoaded', this.bittrex.BTC_ETH);
-    else if (pair === "BTC_DOGE")
-      this.io.to("BTC_DOGE").emit('orderBookLoaded', this.bittrex.BTC_DOGE);
+  orderBookUpdateHandler = (pair: CurrencyPair) => {
+    this.io.to(pair).emit('orderBookLoaded', this.orderBookService.books[pair]);
   }
 }
