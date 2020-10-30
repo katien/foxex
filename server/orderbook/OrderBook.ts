@@ -1,8 +1,8 @@
 export class OrderBook {
-  bid: PricePoint;
-  ask: PricePoint;
+  bid: Totals;
+  ask: Totals;
 
-  constructor(bid: PricePoint, ask: PricePoint) {
+  constructor(bid: Totals, ask: Totals) {
     this.bid = bid;
     this.ask = ask;
   }
@@ -26,9 +26,9 @@ export class OrderBook {
 }
 
 /**
- * Represents a line item in an order book
- * Mapping of price to total
+ * Represents line items in an order book, either the set of bids or the set of asks
+ * Mappings of prices to totals
  * */
-export interface PricePoint {
+export interface Totals {
   [price: string]: number
 }

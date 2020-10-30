@@ -1,4 +1,4 @@
 export enum CurrencyPair {
-  BTC_ETH = "BTC-ETH",
-  BTC_DOGE = "BTC-DOGE",
+  BTC_ETH = "BTC_ETH",
+  BTC_DOGE = "BTC_DOGE",
 }

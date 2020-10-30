@@ -4,7 +4,7 @@ import {BittrexResponse} from "../types/BittrexResponse";
 
 const BittrexClient = require('bittrex-signalr-client');
 
-export class Bittrex {
+export class Poloniex {
 
   /**
    * Invoked after the order book for a currency pair has been updated to notify observers
