@@ -1,5 +1,5 @@
 import sio from 'socket.io';
-import {Bittrex} from "./orderbook/bittrex";
+import {Bittrex} from "./remote/bittrex";
 
 export class BrowserConnectionManager {
   bittrex: Bittrex

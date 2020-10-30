@@ -1,6 +1,6 @@
 import express from 'express';
 import {BrowserConnectionManager} from './browserConnectionManager';
-import {Bittrex} from "./orderbook/bittrex";
+import {Bittrex} from "./remote/bittrex";
 // rest of the code remains same
 const app = express();
 const PORT = 3000;

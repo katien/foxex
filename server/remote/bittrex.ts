@@ -1,4 +1,4 @@
-import {OrderBook, PricePoint} from "./OrderBook";
+import {OrderBook, PricePoint} from "../orderbook/OrderBook";
 import {SignalRClient} from "../types/SignalRClient";
 import {BittrexResponse, BittrexResponseEntry} from "../types/BittrexResponse";
 
