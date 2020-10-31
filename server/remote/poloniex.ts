@@ -41,7 +41,7 @@ export class Poloniex {
     this.client.on('orderBook', this.orderBookLoadListener);
     this.client.on('orderBookUpdate', this.orderBookUpdateListener);
 
-    this.client.subscribeToMarkets(['BTC-ETH', 'BTC-DOGE']);
+    this.client.subscribeToMarkets(['BTCETH', 'BTC-DOGE']);
   }
 
   /**

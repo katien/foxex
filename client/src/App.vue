@@ -4,17 +4,20 @@
     <select v-model="currentPair">
       <option v-for="pair in pairs" :key="pair">{{pair}}</option>
     </select>
+    <br>
     <span>Pair: {{ currentPair }}</span>
     <h2>ask</h2>
     <ul id="ask">
-      <li v-for="(total, price) in orderBook.ask" :key="price">
-        {{ price }} : {{ total }}
+
+      <span>Price</span> <span>Bittrex</span> <span>Poloniex</span> <span>Combined</span>
+      <li v-for="(entry, price) in orderBook.ask" :key="price">
+        <span>{{ price }}</span> <span>{{ entry.bittrex }}</span> <span>{{ entry.poloniex }}</span> <span>{{ entry.combined }}</span>
       </li>
     </ul>
     <h2>bid</h2>
     <ul id="bid">
-      <li v-for="(total, price) in orderBook.ask" :key="price">
-        {{ price }} : {{ total }}
+      <li v-for="(entry, price) in orderBook.bid" :key="price">
+        <span>{{ price }}</span> <span>{{ entry.bittrex }}</span> <span>{{ entry.poloniex }}</span> <span>{{ entry.combined }}</span>
       </li>
     </ul>
   </div>
@@ -24,16 +27,26 @@
   import Vue from 'vue';
   import io from 'socket.io-client';
 
+  export interface OrderBook {
+    bid: Totals;
+    ask: Totals;
+  }
+
+  interface Totals {
+    [price: string]: {
+      bittrex: number;
+      poloniex: number;
+      combined: number;
+    };
+  }
+
   export default Vue.extend({
     name: 'App',
     data() {
       return {
         pairs: ["BTC_ETH", "BTC_DOGE"],
         currentPair: null,
-        orderBook: {
-          bid: {},
-          ask: {}
-        },
+        orderBook: {},
         socket: io("localhost:3000")
       };
     },
@@ -45,6 +58,7 @@
       }
     },
     mounted() {
+      this.currentPair = "BTC_ETH";
       this.socket.on("debug", (data: string) => {
         console.log(`debug: ${data}`);
       });
@@ -54,11 +68,6 @@
       });
     }
   });
-
-  export interface OrderBook {
-    bid: { [price: string]: number };
-    ask: { [price: string]: number };
-  }
 
 </script>
 
@@ -71,5 +80,14 @@
     color: #2c3e50;
     margin-top: 60px;
     font-size: 12px;
+  }
+
+  li {
+    list-style: none;
+  }
+
+  ul span {
+    width: 10rem;
+    display: inline-block;
   }
 </style>

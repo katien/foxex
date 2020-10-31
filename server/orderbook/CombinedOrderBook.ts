@@ -1,4 +1,5 @@
 import {OrderBook, Totals} from "./OrderBook";
+import {CombinedBookResponse, CombinedTotals} from "../types/CombinedBookResponse";
 
 export class CombinedOrderBook {
   bittrexOrderBook?: OrderBook;
@@ -10,29 +11,23 @@ export class CombinedOrderBook {
     this.poloniexOrderBook = poloniexOrderBook;
   }
 
-  get combinedTotals(): OrderBook {
-    return new OrderBook(this.combinedBids, this.combinedAsks)
-  }
-
-  get combinedBids(): Totals {
-    let combined: Totals = this.poloniexOrderBook?.bid || {};
-    for (let price of Object.keys(this.bittrexOrderBook?.bid || {})) {
-      if (combined[price]) {
-        combined[price] += (this.bittrexOrderBook?.bid[price] || 0);
-      } else {
-        combined[price] = this.bittrexOrderBook?.bid[price] || 0;
-      }
+  get combinedTotals(): CombinedBookResponse {
+    return {
+      bid: this.combineTotals(this.bittrexOrderBook?.bid || {}, this.poloniexOrderBook?.bid || {}),
+      ask: this.combineTotals(this.bittrexOrderBook?.ask || {}, this.poloniexOrderBook?.ask || {})
     }
-    return combined;
   }
 
-  get combinedAsks(): Totals {
-    let combined: Totals = this.poloniexOrderBook?.ask || {};
-    for (let price of Object.keys(this.bittrexOrderBook?.ask || {})) {
-      if (combined[price]) {
-        combined[price] += (this.bittrexOrderBook?.ask[price] || 0);
-      } else {
-        combined[price] = this.bittrexOrderBook?.ask[price] || 0;
+  private combineTotals(bittrex: Totals, poloniex: Totals): CombinedTotals {
+    let combined: CombinedTotals = {};
+    for (let price of Object.keys({
+      ...bittrex,
+      ...poloniex
+    })) {
+      combined[price] = {
+        combined: (bittrex[price] || 0) + (poloniex[price] || 0),
+        bittrex: bittrex[price] || 0,
+        poloniex: poloniex[price] || 0
       }
     }
     return combined;

@@ -28,7 +28,7 @@ export class BrowserConnectionManager {
         if (subscribedPair) {
           socket.join(pair);
           // immediately dispatch order book for subscribed pair
-          this.io.to(socket.id).emit('orderBookLoaded', this.orderBookService.books[subscribedPair]);
+          this.io.to(socket.id).emit('orderBookLoaded', this.orderBookService.books[subscribedPair].combinedTotals);
         }
       });
     });
