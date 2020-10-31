@@ -5,7 +5,7 @@ import {Poloniex} from "./remote/poloniex";
 import {OrderBookService} from "./orderbook/OrderBookService";
 // rest of the code remains same
 const app = express();
-const PORT = 3000;
+const PORT = 8080;
 
 let server = app.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
