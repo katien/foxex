@@ -10,7 +10,7 @@ const PORT = 3000;
 let server = app.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
 });
-app.use(express.static('../client/dist', {index:"index.html"}))
+app.use(express.static('client/dist', {index:"index.html"}))
 const io = require('socket.io')(server);
 const bittrex = new Bittrex();
 const poloniex = new Poloniex();
