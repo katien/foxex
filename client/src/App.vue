@@ -45,7 +45,7 @@
     data() {
       return {
         pairs: ["BTC_ETH", "BTC_DOGE"],
-        currentPair: null,
+        currentPair: "",
         orderBook: {},
         socket: io("localhost:3000")
       };
