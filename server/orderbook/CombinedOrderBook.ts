@@ -6,7 +6,6 @@ export class CombinedOrderBook {
   bittrexOrderBook?: OrderBook;
   poloniexOrderBook?: OrderBook;
 
-
   constructor(bittrexOrderBook?: OrderBook, poloniexOrderBook?: OrderBook) {
     this.bittrexOrderBook = bittrexOrderBook;
     this.poloniexOrderBook = poloniexOrderBook;
@@ -20,7 +19,6 @@ export class CombinedOrderBook {
   }
 
   private combineTotals(bittrex: Totals, poloniex: Totals, bid: boolean): CombinedTotals {
-
     let combined: CombinedTotals = {};
     let prices = Object.keys({
       ...bittrex,
@@ -28,9 +26,8 @@ export class CombinedOrderBook {
     });
     // sort ask by highest to lowest
     prices = bid ?
-      prices.sort((a, b) => a > b ? -1 : 1).slice(0, this.LIMIT) :
-      prices.sort((a, b) => a < b ? -1 : 1).slice(0, this.LIMIT)
-
+      prices.sort((a, b) => Number(a) > Number(b) ? -1 : 1).slice(0, this.LIMIT) :
+      prices.sort((a, b) => Number(a) > Number(b) ? -1 : 1).slice(prices.length - this.LIMIT, prices.length);
 
     for (let price of prices) {
       combined[price] = {
