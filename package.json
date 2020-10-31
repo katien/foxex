@@ -8,7 +8,8 @@
     "lint": "(cd client vue-cli-service lint client)",
     "start": "node server/build/index.js",
     "start:dev": "nodemon server/index.ts",
-    "build": "c --projectst server; (cd client vue-cli-service build)",
+    "build": "tsc --project server; (cd client vue-cli-service build)",
+    "heroku-postbuild": "tsc --project server; (cd client vue-cli-service build)",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
