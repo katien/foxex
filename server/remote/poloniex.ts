@@ -40,7 +40,6 @@ export class Poloniex {
     this.client.subscribe('BTC_DOGE');
 
     this.client.on('message', (channelName, data: PoloniexMessage[], seq) => {
-      console.log(channelName);
       const pair: CurrencyPair | undefined = (<any>CurrencyPair)[channelName];
       if (pair) {
         for (let message of data) {
@@ -69,8 +68,10 @@ export class Poloniex {
 
   messageHandler = (pair: CurrencyPair, message: PoloniexMessage) => {
     if (message.type === "orderBook") {
+      console.log(`poloniex orderBook ${pair}`);
       this.processOrderBook(pair, message.data);
     } else if (message.type === "orderBookModify" || message.type === "orderBookRemove") {
+      console.log(`poloniex orderBookModify ${pair}`);
       this.processOrderBookUpdate(pair, message.data);
     }
   }

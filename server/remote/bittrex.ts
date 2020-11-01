@@ -49,14 +49,12 @@ export class Bittrex {
    * format the data and replace the existing order book with the new data
    * */
   orderBookLoadListener = (response: BittrexResponse) => {
+    console.log(`bittrex orderBookLoaded ${response.pair}`);
     let orderBook = this.parseBittrexResponseToOrderBook(response);
     if (response.pair === "BTC-ETH") {
       Object.assign(this.BTC_ETH, orderBook);
-      console.log(`BTC_ETH orderBookLoaded:\n${JSON.stringify(this.BTC_ETH)}`);
     } else if (response.pair === "BTC-DOGE") {
-      console.log(`orderBookLoaded:\n${JSON.stringify(response)}`);
       Object.assign(this.BTC_DOGE, orderBook);
-      console.log(`BTC_ETH orderBookLoaded:\n${JSON.stringify(this.BTC_DOGE)}`);
     }
   }
 
@@ -66,16 +64,15 @@ export class Bittrex {
    * invoke onOrderBookUpdate to notify observers of the change
    * */
   orderBookUpdateListener = (response: BittrexResponse) => {
+    console.log(`bittrex orderBookUpdate ${response.pair}`);
     if (response.pair === "BTC-ETH") {
       if (this.BTC_ETH) {
         this.processUpdate(response, this.BTC_ETH);
-        console.log(`BTC_ETH orderBookUpdate:\n${JSON.stringify(response)}`);
         this.orderBookUpdateHandler(CurrencyPair.BTC_ETH);
       }
     } else if (response.pair === "BTC-DOGE") {
       if (this.BTC_DOGE) {
         this.processUpdate(response, this.BTC_DOGE);
-        console.log(`BTC_DOGE orderBookUpdate:\n${JSON.stringify(response)}`);
         this.orderBookUpdateHandler(CurrencyPair.BTC_DOGE);
       }
     }
