@@ -26,19 +26,7 @@
 <script lang="ts">
   import Vue from 'vue';
   import io from 'socket.io-client';
-
-  export interface OrderBook {
-    bid: Totals;
-    ask: Totals;
-  }
-
-  interface Totals {
-    [price: string]: {
-      bittrex: number;
-      poloniex: number;
-      combined: number;
-    };
-  }
+  import {OrderBook} from "@/types/OrderBook";
 
   export default Vue.extend({
     name: 'App',
@@ -53,17 +41,12 @@
     watch: {
       currentPair: function (pair) {
         this.currentPair = pair;
-        console.log(`subscribing to ${pair}`);
         this.socket.emit("subscribe", this.currentPair);
       }
     },
     mounted() {
       this.currentPair = "BTC_ETH";
-      this.socket.on("debug", (data: string) => {
-        console.log(`debug: ${data}`);
-      });
       this.socket.on("orderBookLoaded", (orderBook: OrderBook) => {
-        console.log(`orderBookLoaded\n${JSON.stringify(orderBook)}`);
         Vue.set(this.$data, "orderBook", orderBook);
       });
     }
