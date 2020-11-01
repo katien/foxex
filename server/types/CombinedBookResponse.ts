@@ -1,3 +1,6 @@
+/**
+ * Combined order book response pushed to browser clients
+ * */
 export interface CombinedBookResponse {
   bid: CombinedTotals;
   ask: CombinedTotals;

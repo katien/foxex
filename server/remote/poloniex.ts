@@ -1,7 +1,7 @@
 import {OrderBook, Totals} from "../orderbook/OrderBook";
 import {CurrencyPair} from "../types/CurrencyPair";
-import {PoloniexClient} from "../types/PoloniexClient";
-import {PoloniexMessage, PoloniexOrderBook, PoloniexOrderBookUpdate, PoloniexTotals} from "../types/PoloniexResponse";
+import {PoloniexClient} from "../types/poloniex/PoloniexClient";
+import {PoloniexMessage, PoloniexOrderBook, PoloniexOrderBookUpdate, PoloniexTotals} from "../types/poloniex/PoloniexResponse";
 
 const Client = require('poloniex-api-node');
 

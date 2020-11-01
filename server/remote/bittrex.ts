@@ -1,6 +1,6 @@
 import {OrderBook, Totals} from "../orderbook/OrderBook";
-import {SignalRClient} from "../types/SignalRClient";
-import {BittrexResponse} from "../types/BittrexResponse";
+import {SignalRClient} from "../types/bittrex/SignalRClient";
+import {BittrexResponse} from "../types/bittrex/BittrexResponse";
 import {CurrencyPair} from "../types/CurrencyPair";
 
 const BittrexClient = require('bittrex-signalr-client');

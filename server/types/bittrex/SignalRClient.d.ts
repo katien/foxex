@@ -1,3 +1,6 @@
+/**
+ * Wrapper for javascript Bittrex websocket client library
+ * */
 export interface SignalRClient {
   subscribeToMarkets(markets: string[]): void
 

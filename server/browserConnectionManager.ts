@@ -25,6 +25,7 @@ export class BrowserConnectionManager {
           if (room != socket.id) socket.leave(room);
         }
         const subscribedPair: CurrencyPair | undefined = (<any>CurrencyPair)[pair];
+        // ensure the pair being requested is a valid currency pair
         if (subscribedPair) {
           socket.join(pair);
           // immediately dispatch order book for subscribed pair
