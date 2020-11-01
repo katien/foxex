@@ -47,7 +47,7 @@
         pairs: ["BTC_ETH", "BTC_DOGE"],
         currentPair: "",
         orderBook: {},
-        socket: io("localhost:3000")
+        socket: io()
       };
     },
     watch: {
