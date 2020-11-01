@@ -1,7 +1,7 @@
 import {OrderBook, Totals} from "../orderbook/OrderBook";
 import {CurrencyPair} from "../types/CurrencyPair";
 import {PoloniexClient} from "../types/PoloniexClient";
-import {PoloniexMessage, PoloniexOrderBook, PoloniexOrderBookUpdate} from "../types/PoloniexResponse";
+import {PoloniexMessage, PoloniexOrderBook, PoloniexOrderBookUpdate, PoloniexTotals} from "../types/PoloniexResponse";
 
 const Client = require('poloniex-api-node');
 
@@ -77,15 +77,24 @@ export class Poloniex {
   }
 
   processOrderBook(pair: CurrencyPair, book: PoloniexOrderBook): void {
-    let orderBook = new OrderBook(book.bids, book.asks);
+
+    let orderBook = new OrderBook(this.poloniexTotalsToFoxexTotals(book.bids), this.poloniexTotalsToFoxexTotals(book.asks));
     Object.assign(this[pair], orderBook);
+  }
+
+  poloniexTotalsToFoxexTotals(input: PoloniexTotals): Totals {
+    let output: Totals = {};
+    for (let price in input) {
+      output[price] = Number(input[price]);
+    }
+    return output;
   }
 
   processOrderBookUpdate(pair: CurrencyPair, update: PoloniexOrderBookUpdate) {
     if (update.type === "bid")
-      this[pair].updateBid(update.rate, update.amount);
+      this[pair].updateBid(update.rate, Number(update.amount));
     else if (update.type === "ask")
-      this[pair].updateAsk(update.rate, update.amount);
+      this[pair].updateAsk(update.rate, Number(update.amount));
 
 
     this.orderBookUpdateHandler(pair);

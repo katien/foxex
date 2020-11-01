@@ -9,11 +9,11 @@ export interface PoloniexOrderBook {
 }
 
 export interface PoloniexTotals {
-  [price: string]: number
+  [price: string]: string
 }
 
 export interface PoloniexOrderBookUpdate {
   type: string,
   rate: string,
-  amount: number
+  amount: string
 }
