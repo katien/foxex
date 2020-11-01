@@ -59,7 +59,6 @@ export class Bittrex {
    * invoke onOrderBookUpdate to notify observers of the change
    * */
   orderBookUpdateListener = (response: BittrexResponse) => {
-    console.log(`bittrex orderBookUpdate ${response.pair}`);
     if (response.pair === "BTC-ETH") {
       if (this.BTC_ETH) {
         this.processUpdate(response, this.BTC_ETH);

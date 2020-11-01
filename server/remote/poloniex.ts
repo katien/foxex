@@ -74,7 +74,6 @@ export class Poloniex {
       console.log(`poloniex orderBook ${pair}`);
       this.processOrderBook(pair, message.data);
     } else if (message.type === "orderBookModify" || message.type === "orderBookRemove") {
-      console.log(`poloniex orderBookModify ${pair}`);
       this.processOrderBookUpdate(pair, message.data);
     }
   }
