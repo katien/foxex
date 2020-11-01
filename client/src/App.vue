@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1>Foxex</h1>
+    <h1>FOXEX</h1>
     <select v-model="currentPair">
       <option v-for="pair in pairs" :key="pair">{{pair}}</option>
     </select>
