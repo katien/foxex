@@ -4,7 +4,7 @@
   "description": "Combined Bittrex and Poloniex order book. Note:Root package.json manages heroku deployments, see client and server package.jsons for dev scripts",
   "scripts": {
     "start": "node server/build/index.js",
-    "build": "npm run build --prefix server &&  npm run build --prefix client"
+    "build": "npm install --prefix server;npm run build --prefix server ;npm install --prefix client;  npm run build --prefix client"
   },
   "devDependencies": {
     "ts-node": "^9.0.0",
