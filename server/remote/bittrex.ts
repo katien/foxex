@@ -1,5 +1,5 @@
 import {OrderBook, Totals} from "../orderbook/OrderBook";
-import {SignalRClient} from "../types/bittrex/SignalRClient";
+import {BittrexClient} from "../types/bittrex/SignalRClient";
 import {BittrexResponse} from "../types/bittrex/BittrexResponse";
 import {CurrencyPair} from "../types/CurrencyPair";
 
@@ -13,11 +13,6 @@ export class Bittrex {
   onChange?: (pair: CurrencyPair) => void
 
   /**
-   * Level of precision to allow in order books
-   * */
-  readonly PRECISION = 8;
-
-  /**
    * Locally maintained copies of order books for relevant currency pairs
    * lateinit
    * TODO: handle missing order book/reload
@@ -25,7 +20,7 @@ export class Bittrex {
   readonly BTC_ETH: OrderBook = new OrderBook({}, {});
   readonly BTC_DOGE: OrderBook = new OrderBook({}, {});
 
-  private client: SignalRClient;
+  private client: BittrexClient;
 
   /**
    * Create a bittrex client
@@ -84,12 +79,12 @@ export class Bittrex {
   private parseBittrexResponseToOrderBook(response: BittrexResponse): OrderBook {
     let ask: Totals = {};
     for (let record of response.data.sell) {
-      let rate: string = (record.rate.toFixed(this.PRECISION));
+      let rate: string = (record.rate.toFixed(8));
       ask[rate] = record.quantity;
     }
     let bid: Totals = {};
     for (let record of response.data.buy) {
-      let rate: string = (record.rate.toFixed(this.PRECISION));
+      let rate: string = (record.rate.toFixed(8));
       bid[rate] = record.quantity;
     }
     return new OrderBook(bid, ask);
@@ -97,10 +92,10 @@ export class Bittrex {
 
   private processUpdate(raw: BittrexResponse, book: OrderBook): void {
     for (let record of raw.data.buy) {
-      book.updateBid((record.rate.toFixed(this.PRECISION)), record.quantity)
+      book.updateBid((record.rate.toFixed(8)), record.quantity)
     }
     for (let record of raw.data.sell) {
-      book.updateAsk((record.rate.toFixed(this.PRECISION)), record.quantity)
+      book.updateAsk((record.rate.toFixed(8)), record.quantity)
     }
   }
 }
