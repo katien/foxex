@@ -1,9 +1,8 @@
 import express from 'express';
-import {BrowserConnectionManager} from './browserConnectionManager';
+import {ConnectionManager} from './connectionManager';
 import {Bittrex} from "./remote/bittrex";
 import {Poloniex} from "./remote/poloniex";
 import {OrderBookService} from "./orderbook/OrderBookService";
-// rest of the code remains same
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -20,5 +19,5 @@ const bittrex = new Bittrex();
 const poloniex = new Poloniex();
 
 const orderBookService = new OrderBookService(bittrex, poloniex)
-const connectionManager = new BrowserConnectionManager(io, orderBookService);
+const connectionManager = new ConnectionManager(io, orderBookService);
 
