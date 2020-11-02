@@ -31,7 +31,7 @@ export class CombinedOrderBook {
   /**
    * ENTRY_COUNT highest bids to display in order book
    * */
-  get displayBids(): string[] {
+  private get displayBids(): string[] {
     let prices = Object.keys({...this.bittrexOrderBook?.bid, ...this.poloniexOrderBook?.bid});
     return prices
       .sort((a, b) => Number(a) > Number(b) ? -1 : 1)
@@ -41,7 +41,7 @@ export class CombinedOrderBook {
   /**
    * ENTRY_COUNT lowest asks to display in order book
    * */
-  get displayAsks(): string[] {
+  private get displayAsks(): string[] {
     let prices = Object.keys({...this.bittrexOrderBook?.ask, ...this.poloniexOrderBook?.ask});
     return prices
       .sort((a, b) => Number(a) > Number(b) ? -1 : 1)

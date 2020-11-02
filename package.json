@@ -4,7 +4,10 @@
   "description": "Combined Bittrex and Poloniex order book",
   "scripts": {
     "start": "node server/build/index.js",
-    "build": "tsc --project ./server; vue-cli-service build"
+    "build": "tsc --project ./server; vue-cli-service build",
+    "test": "mocha -r ts-node/register 'server/tests/*.ts'",
+    "dev:server": "ts-node --dir server index.ts",
+    "dev:client": "vue-cli-service serve"
   },
   "dependencies": {
     "bittrex-signalr-client": "^1.1.10",
