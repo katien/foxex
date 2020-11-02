@@ -51,7 +51,6 @@ export class Bittrex {
    * populate the existing order book with the new data
    * */
   orderBookLoadListener = (response: BittrexResponse) => {
-    console.log(`bittrex orderBookLoaded ${response.pair}`);
     let orderBook = this.parseBittrexResponse(response);
     if (response.pair === "BTC-ETH") {
       Object.assign(this.BTC_ETH, orderBook);

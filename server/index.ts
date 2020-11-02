@@ -1,5 +1,5 @@
 import express from 'express';
-import {ConnectionManager} from './connectionManager';
+import {ConnectionManager} from './ConnectionManager';
 import {Bittrex} from "./remote/bittrex";
 import {Poloniex} from "./remote/poloniex";
 import {OrderBookRepository} from "./OrderBookRepository";
