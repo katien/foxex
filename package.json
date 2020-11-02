@@ -1,10 +1,10 @@
 {
   "name": "foxex",
   "version": "1.0.0",
-  "description": "Combined Bittrex and Poloniex order book. Note:Root package.json manages heroku deployments, see client and server package.jsons for dev scripts",
+  "description": "Combined Bittrex and Poloniex order book",
   "scripts": {
     "start": "node server/build/index.js",
-    "build": "  npm run build --prefix server; npm run build --prefix client"
+    "build": "npm run build --prefix server; npm run build --prefix client"
   },
   "dependencies": {
     "bittrex-signalr-client": "^1.1.10",

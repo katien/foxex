@@ -1,5 +1,5 @@
 /**
- * Wrapper for javascript Poloniex websocket client library
+ * Javascript Poloniex websocket client library
  * */
 export interface PoloniexClient {
   subscribe(markets: string): void;

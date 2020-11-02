@@ -1,5 +1,5 @@
 /**
- * Wrapper for javascript Bittrex websocket client library
+ * Javascript Bittrex websocket client library
  * */
 export interface BittrexClient {
   subscribeToMarkets(markets: string[]): void

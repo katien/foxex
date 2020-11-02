@@ -8,7 +8,7 @@ export class CombinedOrderBook {
   /**
    * Number of Bids and Asks to store
    * */
-  private readonly LIMIT = 15;
+  private readonly ENTRY_COUNT = 15;
 
   private readonly bittrexOrderBook: OrderBook;
   private readonly poloniexOrderBook: OrderBook;
@@ -29,23 +29,23 @@ export class CombinedOrderBook {
   }
 
   /**
-   * N highest bids to display in order book
+   * ENTRY_COUNT highest bids to display in order book
    * */
   get displayBids(): string[] {
     let prices = Object.keys({...this.bittrexOrderBook?.bid, ...this.poloniexOrderBook?.bid});
     return prices
       .sort((a, b) => Number(a) > Number(b) ? -1 : 1)
-      .slice(0, this.LIMIT);
+      .slice(0, this.ENTRY_COUNT);
   }
 
   /**
-   * N lowest asks to display in order book
+   * ENTRY_COUNT lowest asks to display in order book
    * */
   get displayAsks(): string[] {
     let prices = Object.keys({...this.bittrexOrderBook?.ask, ...this.poloniexOrderBook?.ask});
     return prices
       .sort((a, b) => Number(a) > Number(b) ? -1 : 1)
-      .slice(prices.length - this.LIMIT, prices.length);
+      .slice(prices.length - this.ENTRY_COUNT, prices.length);
   }
 
 
