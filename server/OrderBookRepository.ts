@@ -1,12 +1,12 @@
-import {Bittrex} from "../remote/bittrex";
-import {CurrencyPair} from "../types/CurrencyPair";
-import {CombinedOrderBook} from "./CombinedOrderBook";
-import {Poloniex} from "../remote/poloniex";
+import {Bittrex} from "./remote/bittrex";
+import {CurrencyPair} from "./types/CurrencyPair";
+import {CombinedOrderBook} from "./types/CombinedOrderBook";
+import {Poloniex} from "./remote/poloniex";
 
 /**
  * Maintains a CombinedOrderBook for each currency pair
  * */
-export class OrderBookService {
+export class OrderBookRepository {
   /**
    * Callback to be invoked each time an update is pushed for an order book
    * Allows browser ConnectionManager to subscribe to changes
@@ -29,7 +29,7 @@ export class OrderBookService {
     this.bittrex.onChange = this.orderBookUpdateHandler;
     this.poloniex = poloniex;
     this.poloniex.onChange = this.orderBookUpdateHandler;
-    
+
     // instantiate a combined order book for each pair
     this.books = {
       [CurrencyPair.BTC_ETH]: new CombinedOrderBook(this.bittrex.BTC_ETH, this.poloniex.BTC_ETH),

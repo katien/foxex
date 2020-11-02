@@ -1,5 +1,5 @@
 import sio from 'socket.io';
-import {OrderBookService} from "./orderbook/OrderBookService";
+import {OrderBookRepository} from "./OrderBookRepository";
 import {CurrencyPair} from "./types/CurrencyPair";
 
 /**
@@ -7,10 +7,10 @@ import {CurrencyPair} from "./types/CurrencyPair";
  * publishes order book updates to browsers
  * */
 export class ConnectionManager {
-  orderBookService: OrderBookService
+  orderBookService: OrderBookRepository
   io: sio.Server
 
-  constructor(io: sio.Server, orderBookManager: OrderBookService) {
+  constructor(io: sio.Server, orderBookManager: OrderBookRepository) {
     this.io = io;
     this.orderBookService = orderBookManager;
     this.orderBookService.onChange = this.orderBookUpdateHandler;

@@ -2,7 +2,7 @@ import express from 'express';
 import {ConnectionManager} from './connectionManager';
 import {Bittrex} from "./remote/bittrex";
 import {Poloniex} from "./remote/poloniex";
-import {OrderBookService} from "./orderbook/OrderBookService";
+import {OrderBookRepository} from "./OrderBookRepository";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -18,6 +18,6 @@ const io = require('socket.io')(server);
 const bittrex = new Bittrex();
 const poloniex = new Poloniex();
 
-const orderBookService = new OrderBookService(bittrex, poloniex)
+const orderBookService = new OrderBookRepository(bittrex, poloniex)
 const connectionManager = new ConnectionManager(io, orderBookService);
 
