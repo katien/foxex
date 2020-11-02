@@ -1,4 +1,5 @@
 module.exports = {
+  outputDir:'./client/dist',
   chainWebpack: config => {
     config
       .plugin('fork-ts-checker')
