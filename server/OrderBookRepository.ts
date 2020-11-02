@@ -1,7 +1,7 @@
-import {Bittrex} from "./remote/bittrex";
+import {Bittrex} from "./remote/Bittrex";
 import {CurrencyPair} from "./types/CurrencyPair";
 import {CombinedOrderBook} from "./types/CombinedOrderBook";
-import {Poloniex} from "./remote/poloniex";
+import {Poloniex} from "./remote/Poloniex";
 
 /**
  * Maintains a CombinedOrderBook for each currency pair

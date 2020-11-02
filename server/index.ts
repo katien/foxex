@@ -1,7 +1,7 @@
 import express from 'express';
 import {ConnectionManager} from './ConnectionManager';
-import {Bittrex} from "./remote/bittrex";
-import {Poloniex} from "./remote/poloniex";
+import {Bittrex} from "./remote/Bittrex";
+import {Poloniex} from "./remote/Poloniex";
 import {OrderBookRepository} from "./OrderBookRepository";
 const app = express();
 const PORT = process.env.PORT || 3000;
