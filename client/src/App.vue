@@ -10,14 +10,14 @@
     <ul id="ask">
 
       <span>Price</span> <span>Bittrex</span> <span>Poloniex</span> <span>Combined</span>
-      <li v-for="(entry, price) in orderBook.ask" :key="price">
-        <span>{{ price }}</span> <span>{{ entry.bittrex }}</span> <span>{{ entry.poloniex }}</span> <span>{{ entry.combined }}</span>
+      <li v-for="entry in orderBook.ask" :key="entry.price">
+        <span>{{ entry.price }}</span> <span>{{ entry.bittrex }}</span> <span>{{ entry.poloniex }}</span> <span>{{ entry.combined }}</span>
       </li>
     </ul>
     <h2>bid</h2>
     <ul id="bid">
-      <li v-for="(entry, price) in orderBook.bid" :key="price">
-        <span>{{ price }}</span> <span>{{ entry.bittrex }}</span> <span>{{ entry.poloniex }}</span> <span>{{ entry.combined }}</span>
+      <li v-for="entry in orderBook.bid" :key="entry.price">
+        <span>{{ entry.price }}</span> <span>{{ entry.bittrex }}</span> <span>{{ entry.poloniex }}</span> <span>{{ entry.combined }}</span>
       </li>
     </ul>
   </div>

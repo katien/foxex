@@ -23,44 +23,43 @@ export class CombinedOrderBook {
    * */
   get combinedTotals(): CombinedBookResponse {
     return {
-      bid: this.combineTotals(this.displayBids, this.bittrexOrderBook?.bid, this.poloniexOrderBook?.bid),
-      ask: this.combineTotals(this.displayAsks, this.bittrexOrderBook?.ask, this.poloniexOrderBook?.ask)
+      bid: this.displayBids,
+      ask: this.displayAsks
     }
   }
 
   /**
-   * ENTRY_COUNT highest bids to display in order book
+   * Aggregates bids from Bittrex and Poloniex
+   * sorts by descending price and returns first ENTRY_COUNT bids formatted as CombinedTotals
    * */
-  private get displayBids(): string[] {
-    let prices = Object.keys({...this.bittrexOrderBook?.bid, ...this.poloniexOrderBook?.bid});
-    return prices
+  private get displayBids(): CombinedTotals[] {
+    let aggregatePrices = Object.keys({...this.bittrexOrderBook?.bid, ...this.poloniexOrderBook?.bid});
+    let displayPrices = aggregatePrices
       .sort((a, b) => Number(a) > Number(b) ? -1 : 1)
       .slice(0, this.ENTRY_COUNT);
+
+    return displayPrices.map((price) => ({
+      price,
+      combined: String((this.bittrexOrderBook.bid[price] || 0) + (this.poloniexOrderBook.bid[price] || 0)),
+      bittrex: String(this.bittrexOrderBook.bid[price] || 0),
+      poloniex: String(this.poloniexOrderBook.bid[price] || 0)
+    }));
   }
 
   /**
-   * ENTRY_COUNT lowest asks to display in order book
+   * Aggregates asks from Bittrex and Poloniex
+   * sorts by descending price and returns last ENTRY_COUNT asks formatted as CombinedTotals
    * */
-  private get displayAsks(): string[] {
-    let prices = Object.keys({...this.bittrexOrderBook?.ask, ...this.poloniexOrderBook?.ask});
-    return prices
+  private get displayAsks(): CombinedTotals[] {
+    let aggregatePrices = Object.keys({...this.bittrexOrderBook?.ask, ...this.poloniexOrderBook?.ask});
+    let displayPrices = aggregatePrices
       .sort((a, b) => Number(a) > Number(b) ? -1 : 1)
-      .slice(prices.length - this.ENTRY_COUNT, prices.length);
-  }
-
-
-  /**
-   * Adds Bittrex and Poloniex totals if both books have entries at the same price point
-   * */
-  private combineTotals(prices: string[], bittrex: Totals, poloniex: Totals): CombinedTotals {
-    let combined: CombinedTotals = {};
-    for (let price of prices) {
-      combined[price] = {
-        combined: (bittrex[price] || 0) + (poloniex[price] || 0),
-        bittrex: bittrex[price] || 0,
-        poloniex: poloniex[price] || 0
-      }
-    }
-    return combined;
+      .slice(aggregatePrices.length - this.ENTRY_COUNT, aggregatePrices.length);
+    return displayPrices.map((price) => ({
+      price: price,
+      combined: String((this.bittrexOrderBook.ask[price] || 0) + (this.poloniexOrderBook.ask[price] || 0)),
+      bittrex: String(this.bittrexOrderBook.ask[price] || 0),
+      poloniex: String(this.poloniexOrderBook.ask[price] || 0)
+    }));
   }
 }

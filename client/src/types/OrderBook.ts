@@ -4,9 +4,8 @@ export interface OrderBook {
 }
 
 export interface Totals {
-  [price: string]: {
-    bittrex: number;
-    poloniex: number;
-    combined: number;
-  };
+  price: string
+  bittrex: string;
+  poloniex: string;
+  combined: string;
 }
