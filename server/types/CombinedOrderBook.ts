@@ -54,7 +54,7 @@ export class CombinedOrderBook {
     let aggregatePrices = Object.keys({...this.bittrexOrderBook?.ask, ...this.poloniexOrderBook?.ask});
     let displayPrices = aggregatePrices
       .sort((a, b) => Number(a) > Number(b) ? -1 : 1)
-      .slice(aggregatePrices.length - this.ENTRY_COUNT, aggregatePrices.length);
+      .slice(-this.ENTRY_COUNT);
     return displayPrices.map((price) => ({
       price: price,
       combined: String((this.bittrexOrderBook.ask[price] || 0) + (this.poloniexOrderBook.ask[price] || 0)),
