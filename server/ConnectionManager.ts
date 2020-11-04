@@ -7,13 +7,13 @@ import {CurrencyPair} from "./types/CurrencyPair";
  * publishes order book updates to browsers
  * */
 export class ConnectionManager {
-  orderBookService: OrderBookRepository
+  orderBookRepository: OrderBookRepository
   io: sio.Server
 
-  constructor(io: sio.Server, orderBookManager: OrderBookRepository) {
+  constructor(io: sio.Server, orderBookRepository: OrderBookRepository) {
     this.io = io;
-    this.orderBookService = orderBookManager;
-    this.orderBookService.onChange = this.orderBookUpdateHandler;
+    this.orderBookRepository = orderBookRepository;
+    this.orderBookRepository.onChange = this.orderBookUpdateHandler;
 
     // Listens for new browser connections
     this.io.on('connection', this.connectionHandler)
@@ -34,7 +34,7 @@ export class ConnectionManager {
       if (subscribedPair) {
         socket.join(pair);
         // immediately dispatch order book for subscribed pair
-        this.io.to(socket.id).emit('orderBookLoaded', this.orderBookService.books[subscribedPair].combinedTotals);
+        this.io.to(socket.id).emit('orderBookLoaded', this.orderBookRepository.books[subscribedPair].combinedTotals);
       }
     });
   }
@@ -45,6 +45,6 @@ export class ConnectionManager {
    * broadcasts updated order book to relevant room
    * */
   orderBookUpdateHandler = (pair: CurrencyPair) => {
-    this.io.to(pair).emit('orderBookLoaded', this.orderBookService.books[pair].combinedTotals);
+    this.io.to(pair).emit('orderBookLoaded', this.orderBookRepository.books[pair].combinedTotals);
   }
 }

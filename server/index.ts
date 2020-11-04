@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 let server = app.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
 });
-app.use(express.static(process.env.NODE_ENV === "local" ? '../client/dist' : 'client/dist', {index: "index.html"}));
+app.use(express.static( 'client/dist', {index: "index.html"}));
 
 // register socketio with http server
 const io = require('socket.io')(server);
@@ -19,6 +19,6 @@ const io = require('socket.io')(server);
 const bittrex = new Bittrex();
 const poloniex = new Poloniex();
 
-const orderBookService = new OrderBookRepository(bittrex, poloniex)
-const connectionManager = new ConnectionManager(io, orderBookService);
+const orderBookRepository = new OrderBookRepository(bittrex, poloniex)
+new ConnectionManager(io, orderBookRepository);
 

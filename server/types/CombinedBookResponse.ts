@@ -7,8 +7,6 @@ export interface CombinedBookResponse {
   ask: CombinedTotals[];
 }
 
-/**
- * */
 export interface CombinedTotals {
     price: string;
     bittrex: string;

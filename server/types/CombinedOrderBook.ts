@@ -1,4 +1,4 @@
-import {OrderBook, Totals} from "./OrderBook";
+import {OrderBook} from "./OrderBook";
 import {CombinedBookResponse, CombinedTotals} from "./CombinedBookResponse";
 
 /**

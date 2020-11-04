@@ -24,13 +24,16 @@ export class OrderBookRepository {
    * */
   books: { [pair in CurrencyPair]: CombinedOrderBook }
 
+  /**
+   * Instantiates a combined order book for each pair
+   * Registers change listeners on bittrex and poloniex clients
+   * */
   constructor(bittrex: Bittrex, poloniex: Poloniex) {
     this.bittrex = bittrex;
     this.bittrex.onChange = this.orderBookUpdateHandler;
     this.poloniex = poloniex;
     this.poloniex.onChange = this.orderBookUpdateHandler;
 
-    // instantiate a combined order book for each pair
     this.books = {
       [CurrencyPair.BTC_ETH]: new CombinedOrderBook(this.bittrex.BTC_ETH, this.poloniex.BTC_ETH),
       [CurrencyPair.BTC_DOGE]: new CombinedOrderBook(this.bittrex.BTC_DOGE, this.poloniex.BTC_DOGE)
