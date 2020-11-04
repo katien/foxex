@@ -65,15 +65,14 @@ export class Bittrex {
    * */
   orderBookUpdateListener = (response: BittrexResponse) => {
     if (response.pair === "BTC-ETH") {
-      if (this.BTC_ETH) {
-        this.processUpdate(response, this.BTC_ETH);
-        this.orderBookUpdateHandler(CurrencyPair.BTC_ETH);
-      }
+      this.processUpdate(response, this.BTC_ETH);
+      this.orderBookUpdateHandler(CurrencyPair.BTC_ETH);
+
     } else if (response.pair === "BTC-DOGE") {
-      if (this.BTC_DOGE) {
-        this.processUpdate(response, this.BTC_DOGE);
-        this.orderBookUpdateHandler(CurrencyPair.BTC_DOGE);
-      }
+
+      this.processUpdate(response, this.BTC_DOGE);
+      this.orderBookUpdateHandler(CurrencyPair.BTC_DOGE);
+
     }
   }
 
