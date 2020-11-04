@@ -67,11 +67,7 @@
     font-size: 12px;
   }
 
-  @media only screen and (max-width: 550px) {
-    span.bittrex, span.poloniex {
-      display: none;
-    }
-  }
+
 
   ul.table {
     padding: 0;
@@ -91,6 +87,11 @@
       }
     }
 
+    @media only screen and (max-width: 550px) {
+      .bittrex, .poloniex {
+        display: none;
+      }
+    }
     span {
       width: 7rem;
       display: inline-block;

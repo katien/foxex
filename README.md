@@ -3,6 +3,13 @@ Foxex is a combined order book displaying data from both Bittrex and Poloniex. F
 
 Ci is managed by CircleCi and will automatically deploy changes to Heroku when new code is pushed to `master`.
 
+### Getting Started
+- To get started in development mode, run:
+`npm run dev:server` 
+`npm run dev:client`
+- To run the app locally in production mode, run:
+`npm run build; npm run start`
+
 ### Scripts
 - `start` - runs server in production mode, will serve compiled client content from `dist` as static files
 - `build` - compiles code in `client` and `server` to be run in production mode
