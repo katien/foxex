@@ -4,8 +4,6 @@
     <select v-model="currentPair">
       <option v-for="pair in pairs" :key="pair">{{pair}}</option>
     </select>
-    <br>
-    <span>Pair: {{ currentPair }}</span>
     <h2>ask</h2>
     <ul id="ask">
 
