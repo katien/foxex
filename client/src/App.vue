@@ -5,17 +5,21 @@
       <option v-for="pair in pairs" :key="pair">{{pair}}</option>
     </select>
     <h2>ask</h2>
-    <ul id="ask">
-
-      <span>Price</span> <span>Bittrex</span> <span>Poloniex</span> <span>Combined</span>
+    <ul class="table" id="ask">
+      <li class="head">
+        <span>Price</span> <span class="bittrex">Bittrex</span> <span class="poloniex">Poloniex</span>
+        <span>Combined</span>
+      </li>
       <li v-for="entry in orderBook.ask" :key="entry.price">
-        <span>{{ entry.price }}</span> <span>{{ entry.bittrex }}</span> <span>{{ entry.poloniex }}</span> <span>{{ entry.combined }}</span>
+        <span>{{ entry.price }}</span> <span class="bittrex">{{ entry.bittrex }}</span> <span class="poloniex">{{ entry.poloniex }}</span>
+        <span>{{ entry.combined }}</span>
       </li>
     </ul>
     <h2>bid</h2>
-    <ul id="bid">
+    <ul class="table" id="bid">
       <li v-for="entry in orderBook.bid" :key="entry.price">
-        <span>{{ entry.price }}</span> <span>{{ entry.bittrex }}</span> <span>{{ entry.poloniex }}</span> <span>{{ entry.combined }}</span>
+        <span>{{ entry.price }}</span> <span class="bittrex">{{ entry.bittrex }}</span> <span class="poloniex">{{ entry.poloniex }}</span>
+        <span>{{ entry.combined }}</span>
       </li>
     </ul>
   </div>
@@ -63,12 +67,33 @@
     font-size: 12px;
   }
 
-  li {
-    list-style: none;
+  @media only screen and (max-width: 550px) {
+    span.bittrex, span.poloniex {
+      display: none;
+    }
   }
 
-  ul span {
-    width: 10rem;
-    display: inline-block;
+  ul.table {
+    padding: 0;
+    display: table;
+    margin: 0 auto;
+
+    li.head {
+      display: table-header-group;
+      font-weight: 800;
+    }
+
+    li {
+      display: table-row;
+      list-style: none;
+      &:nth-of-type(2n) {
+        background: #ddd;
+      }
+    }
+
+    span {
+      width: 7rem;
+      display: inline-block;
+    }
   }
 </style>
