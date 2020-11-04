@@ -4,7 +4,7 @@ import {PoloniexClient} from "../types/poloniex/PoloniexClient";
 import {PoloniexMessage} from "../types/poloniex/PoloniexMessage";
 import {PoloniexOrderBook} from "../types/poloniex/PoloniexOrderBook";
 import {PoloniexTotals} from "../types/poloniex/PoloniexTotals";
-import {PoloniexOrderBookUpdate} from "../types/poloniex/PoloniexOrderBookUpdate";
+import {PoloniexOrderBookUpdate, UpdateType} from "../types/poloniex/PoloniexOrderBookUpdate";
 
 const Client = require('poloniex-api-node');
 
@@ -17,10 +17,9 @@ export class Poloniex {
 
   /**
    * Callback to be invoked each time an update is pushed for an order book
-   * Allows OrderBookRepository to subscribe to changes
+   * Allows observers to subscribe to changes
    * */
   onChange?: (pair: CurrencyPair) => void
-
 
   /**
    * Locally maintained copies of order books for relevant currency pairs
@@ -29,6 +28,19 @@ export class Poloniex {
    * */
   readonly BTC_ETH: OrderBook = new OrderBook({}, {});
   readonly BTC_DOGE: OrderBook = new OrderBook({}, {});
+
+  private readonly subscribedMarkets = [CurrencyPair.BTC_DOGE, CurrencyPair.BTC_ETH];
+
+  /**
+   * Poloniex API events
+   * */
+  private readonly NEW_ORDER_BOOK_EVENT = "orderBook";
+  private readonly ORDER_BOOK_MODIFY_EVENT = "orderBookModify";
+  private readonly ORDER_BOOK_REMOVE_EVENT = "orderBookRemove";
+  private readonly MESSAGES_EVENT = "message";
+  private readonly CLOSE_EVENT = "close";
+  private readonly ERROR_EVENT = "error";
+
 
   private client: PoloniexClient;
 
@@ -40,21 +52,26 @@ export class Poloniex {
   constructor() {
     this.client = new Client();
 
-    this.client.subscribe('BTC_ETH');
-    this.client.subscribe('BTC_DOGE');
+    for (let market of this.subscribedMarkets) {
+      this.client.subscribe(market);
+    }
 
-    this.client.on('message', this.handleMessages);
+    this.client.on(this.MESSAGES_EVENT, this.handleMessages);
     this.registerErrorHandlers()
     this.client.openWebSocket();
   }
 
-  handleMessages = (channelName: string, data: PoloniexMessage[], seq: number) => {
+  /**
+   * Poloniex messages come in batches and a single batch can contain multiple message types
+   * triggers processing for each message in a batch
+   * */
+  private handleMessages = (channelName: string, data: PoloniexMessage[], seq: number) => {
     const pair: CurrencyPair | undefined = (<any>CurrencyPair)[channelName];
     if (pair) {
       for (let message of data) {
-        if (message.type === "orderBook") {
+        if (message.type === this.NEW_ORDER_BOOK_EVENT) {
           this.processOrderBookMessage(pair, message.data);
-        } else if (message.type === "orderBookModify" || message.type === "orderBookRemove") {
+        } else if (message.type === this.ORDER_BOOK_MODIFY_EVENT || message.type === this.ORDER_BOOK_REMOVE_EVENT) {
           this.processOrderBookUpdateMessage(pair, message.data);
         }
       }
@@ -64,13 +81,13 @@ export class Poloniex {
   /**
    * Register error handling with reconnect logic
    * */
-  registerErrorHandlers() {
-    this.client.on('close', (reason, details) => {
+  private registerErrorHandlers() {
+    this.client.on(this.CLOSE_EVENT, (reason, details) => {
       console.log(`Poloniex WebSocket connection disconnected, reconnecting.\nReason: ${reason}\nDetails: ${details}`);
       this.client.openWebSocket();
     });
 
-    this.client.on('error', (error) => {
+    this.client.on(this.ERROR_EVENT, (error) => {
       console.log(`An error has occurred, reconnecting.\nError:${JSON.stringify(error)}`);
       this.client.openWebSocket();
     });
@@ -79,7 +96,7 @@ export class Poloniex {
   /**
    * A new order book has been received for a currency pair, update the local copy
    * */
-  processOrderBookMessage(pair: CurrencyPair, book: PoloniexOrderBook): void {
+  private processOrderBookMessage(pair: CurrencyPair, book: PoloniexOrderBook): void {
     let orderBook = new OrderBook(this.parsePoloniexTotals(book.bids), this.parsePoloniexTotals(book.asks));
     Object.assign(this[pair], orderBook);
   }
@@ -88,10 +105,10 @@ export class Poloniex {
    * An entry in an order book for a currency pair has been changed
    * update the local copy and notify observers
    * */
-  processOrderBookUpdateMessage(pair: CurrencyPair, update: PoloniexOrderBookUpdate) {
-    if (update.type === "bid")
+  private processOrderBookUpdateMessage(pair: CurrencyPair, update: PoloniexOrderBookUpdate) {
+    if (update.type === UpdateType.bid)
       this[pair].updateBid(update.rate, Number(update.amount));
-    else if (update.type === "ask")
+    else if (update.type === UpdateType.ask)
       this[pair].updateAsk(update.rate, Number(update.amount));
 
     this.orderBookUpdateHandler(pair);
@@ -99,7 +116,7 @@ export class Poloniex {
 
   /**
    * Convert Poloniex response to standard Order Book Total format*/
-  parsePoloniexTotals(input: PoloniexTotals): Totals {
+  private parsePoloniexTotals(input: PoloniexTotals): Totals {
     let output: Totals = {};
     for (let price in input) {
       output[price] = Number(input[price]);
@@ -109,11 +126,8 @@ export class Poloniex {
 
   /**
    * triggered each time an update is pushed for an order book
-   * invokes onChange callback to notify OrderBookRepository that an order book has changed
+   * invokes onChange callback to notify observers that an order book has changed
    * */
-  orderBookUpdateHandler = (pair: CurrencyPair) => {
-    this.onChange?.(pair);
-  }
-
+  private orderBookUpdateHandler = (pair: CurrencyPair) => this.onChange?.(pair);
 }
 

@@ -3,7 +3,11 @@
  * Represents a new rate - amount entry in an order book for a currency pair
  * */
 export interface PoloniexOrderBookUpdate {
-  type: string,
+  type: UpdateType,
   rate: string,
   amount: string
+}
+
+export enum UpdateType {
+  bid = "bid", ask = "ask"
 }

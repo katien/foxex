@@ -87,15 +87,14 @@
       }
     }
 
-    @media only screen and (max-width: 550px) {
-      .bittrex, .poloniex {
-        display: none;
-      }
-    }
-    
     span {
       width: 24%;
       display: table-cell;
+      @media only screen and (max-width: 400px) {
+        &.bittrex, &.poloniex {
+          display: none;
+        }
+      }
     }
   }
 </style>

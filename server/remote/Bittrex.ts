@@ -14,7 +14,7 @@ export class Bittrex {
 
   /**
    * Callback to be invoked each time an update is pushed for an order book
-   * Allows OrderBookRepository to subscribe to changes
+   * Allows observers to subscribe to changes
    * */
   onChange?: (pair: CurrencyPair) => void
 
@@ -36,7 +36,6 @@ export class Bittrex {
   constructor() {
     this.client = new BittrexClient({
       pingTimeout: 10000,
-      // reconnect if no new data has been received for 5 minutes
       watchdog: {markets: {timeout: 300000, reconnect: true}}
     });
 
@@ -50,7 +49,7 @@ export class Bittrex {
    * Full order book has been loaded for a currency pair
    * populate the existing order book with the new data
    * */
-  orderBookLoadListener = (response: BittrexResponse) => {
+  private orderBookLoadListener = (response: BittrexResponse) => {
     let orderBook = this.parseBittrexResponse(response);
     if (response.pair === "BTC-ETH") {
       Object.assign(this.BTC_ETH, orderBook);
@@ -63,21 +62,19 @@ export class Bittrex {
    * The order book for a currency pair has been updated
    * Update the local order book copy for that pair and notify observers
    * */
-  orderBookUpdateListener = (response: BittrexResponse) => {
+  private orderBookUpdateListener = (response: BittrexResponse) => {
     if (response.pair === "BTC-ETH") {
       this.processUpdate(response, this.BTC_ETH);
       this.orderBookUpdateHandler(CurrencyPair.BTC_ETH);
-
     } else if (response.pair === "BTC-DOGE") {
-
       this.processUpdate(response, this.BTC_DOGE);
       this.orderBookUpdateHandler(CurrencyPair.BTC_DOGE);
-
     }
   }
 
   /**
    * Builds an OrderBook from the data in a BittrexResponse
+   * Format price to have consistent precision of 8
    * */
   private parseBittrexResponse(response: BittrexResponse): OrderBook {
     let ask: Totals = {};
@@ -107,10 +104,9 @@ export class Bittrex {
 
   /**
    * triggered each time an update is pushed for an order book
-   * invokes onChange callback to notify OrderBookRepository that an order book has changed
+   * invokes onChange callback to notify observers that an order book has changed
    * */
-  orderBookUpdateHandler = (pair: CurrencyPair) => {
-    this.onChange?.(pair);
-  }
+  private orderBookUpdateHandler = (pair: CurrencyPair) => this.onChange?.(pair);
+
 }
 
