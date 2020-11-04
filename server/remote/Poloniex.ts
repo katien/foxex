@@ -6,7 +6,7 @@ import {PoloniexOrderBook} from "../types/poloniex/PoloniexOrderBook";
 import {PoloniexTotals} from "../types/poloniex/PoloniexTotals";
 import {PoloniexOrderBookUpdate, UpdateType} from "../types/poloniex/PoloniexOrderBookUpdate";
 
-const Client = require('poloniex-api-node');
+const Client = require("poloniex-api-node");
 
 /**
  * Subscribes to the Poloniex websocket order book API

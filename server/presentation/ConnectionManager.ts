@@ -1,6 +1,6 @@
-import sio from 'socket.io';
-import {OrderBookRepository} from "./OrderBookRepository";
-import {CurrencyPair} from "./types/CurrencyPair";
+import sio from "socket.io";
+import {OrderBookRepository} from "../data/OrderBookRepository";
+import {CurrencyPair} from "../types/CurrencyPair";
 
 /**
  * Maintains websocket connections to browsers
@@ -16,7 +16,7 @@ export class ConnectionManager {
     this.orderBookRepository.onChange = this.orderBookUpdateHandler;
 
     // Listens for new browser connections
-    this.io.on('connection', this.connectionHandler)
+    this.io.on("connection", this.connectionHandler)
   }
 
   /**
@@ -24,7 +24,7 @@ export class ConnectionManager {
    * On new pair subscription adds clients to relevant rooms and immediately emits current copy of order book
    * */
   connectionHandler = (socket: sio.Socket) => {
-    socket.on('subscribe', (pair: string) => {
+    socket.on("subscribe", (pair: string) => {
       // leave all other rooms
       for (let room in socket.rooms) {
         if (room != socket.id) socket.leave(room);
@@ -34,7 +34,7 @@ export class ConnectionManager {
       if (subscribedPair) {
         socket.join(pair);
         // immediately dispatch order book for subscribed pair
-        this.io.to(socket.id).emit('orderBookLoaded', this.orderBookRepository.books[subscribedPair].combinedTotals);
+        this.io.to(socket.id).emit("orderBookLoaded", this.orderBookRepository.books[subscribedPair].combinedTotals);
       }
     });
   }
@@ -44,7 +44,7 @@ export class ConnectionManager {
    * triggered each time an update is pushed for an order book
    * broadcasts updated order book to relevant room
    * */
-  orderBookUpdateHandler = (pair: CurrencyPair) => {
-    this.io.to(pair).emit('orderBookLoaded', this.orderBookRepository.books[pair].combinedTotals);
-  }
+  orderBookUpdateHandler = (pair: CurrencyPair) =>
+    this.io.to(pair).emit("orderBookLoaded", this.orderBookRepository.books[pair].combinedTotals);
+
 }

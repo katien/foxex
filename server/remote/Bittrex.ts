@@ -3,7 +3,7 @@ import {BittrexClient} from "../types/bittrex/SignalRClient";
 import {BittrexResponse} from "../types/bittrex/BittrexResponse";
 import {CurrencyPair} from "../types/CurrencyPair";
 
-const BittrexClient = require('bittrex-signalr-client');
+const BittrexClient = require("bittrex-signalr-client");
 
 /**
  * Subscribes to the Bittrex websocket order book API
@@ -28,6 +28,20 @@ export class Bittrex {
 
   private client: BittrexClient;
 
+
+  /**
+   * Bittrex API events
+   * */
+  private readonly NEW_ORDER_BOOK_EVENT = "orderBook";
+  private readonly ORDER_BOOK_MODIFY_EVENT = "orderBookUpdate";
+
+
+  private readonly BITTREX_MARKETS = {
+    [CurrencyPair.BTC_ETH]: "BTC-ETH",
+    [CurrencyPair.BTC_DOGE]: "BTC-DOGE",
+
+  };
+
   /**
    * Create a bittrex client
    * subscribe to relevant currency pairs
@@ -39,10 +53,10 @@ export class Bittrex {
       watchdog: {markets: {timeout: 300000, reconnect: true}}
     });
 
-    this.client.on('orderBook', this.orderBookLoadListener);
-    this.client.on('orderBookUpdate', this.orderBookUpdateListener);
+    this.client.on(this.NEW_ORDER_BOOK_EVENT, this.orderBookLoadListener);
+    this.client.on(this.ORDER_BOOK_MODIFY_EVENT, this.orderBookUpdateListener);
 
-    this.client.subscribeToMarkets(['BTC-ETH', 'BTC-DOGE']);
+    this.client.subscribeToMarkets(Object.values(this.BITTREX_MARKETS));
   }
 
   /**
@@ -51,9 +65,9 @@ export class Bittrex {
    * */
   private orderBookLoadListener = (response: BittrexResponse) => {
     let orderBook = this.parseBittrexResponse(response);
-    if (response.pair === "BTC-ETH") {
+    if (response.pair === this.BITTREX_MARKETS[CurrencyPair.BTC_ETH]) {
       Object.assign(this.BTC_ETH, orderBook);
-    } else if (response.pair === "BTC-DOGE") {
+    } else if (response.pair === this.BITTREX_MARKETS[CurrencyPair.BTC_DOGE]) {
       Object.assign(this.BTC_DOGE, orderBook);
     }
   }
@@ -63,10 +77,10 @@ export class Bittrex {
    * Update the local order book copy for that pair and notify observers
    * */
   private orderBookUpdateListener = (response: BittrexResponse) => {
-    if (response.pair === "BTC-ETH") {
+    if (response.pair === this.BITTREX_MARKETS[CurrencyPair.BTC_ETH]) {
       this.processUpdate(response, this.BTC_ETH);
       this.orderBookUpdateHandler(CurrencyPair.BTC_ETH);
-    } else if (response.pair === "BTC-DOGE") {
+    } else if (response.pair === this.BITTREX_MARKETS[CurrencyPair.BTC_DOGE]) {
       this.processUpdate(response, this.BTC_DOGE);
       this.orderBookUpdateHandler(CurrencyPair.BTC_DOGE);
     }

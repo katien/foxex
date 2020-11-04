@@ -1,7 +1,7 @@
-import {Bittrex} from "./remote/Bittrex";
-import {CurrencyPair} from "./types/CurrencyPair";
-import {CombinedOrderBook} from "./types/CombinedOrderBook";
-import {Poloniex} from "./remote/Poloniex";
+import {Bittrex} from "../remote/Bittrex";
+import {CurrencyPair} from "../types/CurrencyPair";
+import {CombinedOrderBook} from "../types/CombinedOrderBook";
+import {Poloniex} from "../remote/Poloniex";
 
 /**
  * Maintains a CombinedOrderBook for each currency pair
@@ -45,7 +45,6 @@ export class OrderBookRepository {
    * triggered each time an update is pushed for an order book
    * invokes onChange callback to notify observers that an order book has changed
    * */
-  orderBookUpdateHandler = (pair: CurrencyPair) => {
-    this.onChange?.(pair);
-  }
+  orderBookUpdateHandler = (pair: CurrencyPair) => this.onChange?.(pair);
+
 }
