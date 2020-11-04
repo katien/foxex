@@ -26,6 +26,7 @@ describe('OrderBook', () => {
       expect(Object.keys(orderBook.bid).length).to.equal(0);
       orderBook.updateBid("1", 1);
       expect(orderBook.bid['1']).to.equal(1);
+      expect(0).to.equal(1);
     });
 
   check.it('should store, update, and remove asks',
