@@ -33,3 +33,6 @@ There is reconnect logic in place if Bittrex or Poloniex return an error or are 
 
 ### Libraries
 The Bittrex client library used by Foxex is a work in progress. Given more time, Microsoft's official node signalR client would be a safer way to communicate with Bittrex's API.
+
+### Environment Variables
+Certain configurations are hardcoded, like the number of combined order book entries to calculate and the ports used in development mode. These could be loaded as environment variables.
