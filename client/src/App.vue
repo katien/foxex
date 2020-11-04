@@ -67,16 +67,16 @@
     font-size: 12px;
   }
 
-
-
   ul.table {
+    width: 100%;
+    max-width: 960px;
     padding: 0;
     display: table;
     margin: 0 auto;
 
     li.head {
       display: table-header-group;
-      font-weight: 800;
+      font-weight: bold;
     }
 
     li {
@@ -92,9 +92,10 @@
         display: none;
       }
     }
+    
     span {
-      width: 7rem;
-      display: inline-block;
+      width: 24%;
+      display: table-cell;
     }
   }
 </style>
