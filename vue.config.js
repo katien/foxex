@@ -1,3 +1,6 @@
+/**
+ * These configurations point vue-cli-service at the ./client directory
+ * */
 module.exports = {
   outputDir:'./client/dist',
   chainWebpack: config => {

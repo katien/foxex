@@ -6,7 +6,7 @@
     "start": "node server/build/index.js",
     "build": "tsc --project ./server; vue-cli-service build",
     "test": "mocha --require ts-node/register 'server/tests/*spec.ts'",
-    "dev:server": "ts-node --dir server index.ts",
+    "dev:server": "TS_NODE_PROJECT='./server/tsconfig.json' nodemon server/index.ts" ,
     "dev:client": "vue-cli-service serve"
   },
   "dependencies": {

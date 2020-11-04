@@ -35,7 +35,7 @@
         pairs: ["BTC_ETH", "BTC_DOGE"],
         currentPair: "",
         orderBook: {},
-        socket: io()
+        socket: process.env.NODE_ENV === 'development' ? io("localhost:3000") : io()
       };
     },
     watch: {

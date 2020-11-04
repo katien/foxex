@@ -1,27 +1,35 @@
 # Foxex
-Foxex is a combined order book displaying data from both Bittrex and Poloniex. Foxex server subscribes to the Bittrex and Poloniex websocket APIs for live updates.
+Foxex is a combined order book displaying data from both Bittrex and Poloniex. Foxex subscribes to the Bittrex and Poloniex WebSocket APIs for live updates and uses `socket.io` to push updates to all browser clients subscribed to an order book.
 
-Foxex uses websockets to facilitate live updates in all browser clients subscribed to an order book, data is pushed to browser clients rather than being polled for.
+Ci is managed by CircleCi and will automatically deploy changes to Heroku when new code is pushed to `master`.
 
-Ci is managed with CircleCi and will automatically deploy changes to Heroku when a push is made to master
+### Scripts
+- `start` - runs server in production mode, will serve compiled client content from `dist` as static files
+- `build` - compiles code in `client` and `server` to be run in production mode
+- `test` - runs unit tests
+- `dev:server` - runs a development server at `localhost:3000` with `nodemon`, will restart when changes are made in `server`
+- `dev:client` - runs client in development mode with hot module reloading, will create a socket connection to `localhost:3000` by default
+
+### Heroku Deployment
+Heroku will automatically run `npm run build` and `npm run start` when a new deployment is made.
 
 ## Potential improvements
 
 ### Scaling
-- Maintaining websocket connections to each browser viewing an order book can be resource intensive, so the ability to horizontally scale Foxex's ConnectionManager component would become important as load increased. 
+- Maintaining WebSocket connections to each browser viewing an order book can be resource-intensive, so the ability to horizontally scale Foxex's ConnectionManager component would become important if load increased. 
 
-If Foxex needed to scale, I would divide it into microservices: 
-- a ConnectionManager service to manage browser socket connections
-- a Bittrex service to maintain a subscription to the Bittrex websocket API
-- a Poloniex service to maintain a subscription to the Poloniex websocket API
+If Foxex needed to scale,  it could be divided into microservices: 
+- a ConnectionManager service to manage browser WebSocket connections
+- a Bittrex service to maintain a subscription to the Bittrex WebSocket API
+- a Poloniex service to maintain a subscription to the Poloniex WebSocket API
 
-I'd introduce an external caching service like Redis so that multiple instances of the ConnectionManager service could read from the same data store. The ConnectionManager Service could be scaled horizontally while the Bittrex and Poloniex services would forward order book updates to Redis. Redis also supports PubSub which would allow clients to subscribe to changes.
+An external caching service like Redis could be introduced so that multiple instances of the ConnectionManager service could read from the same data store. The ConnectionManager Service could be scaled horizontally while the Bittrex and Poloniex services would forward order book updates to Redis. Redis also supports PubSub which would allow clients to subscribe to changes.
 
 ### Reactivity
-I've home rolled a solution using callbacks, but what I really want is to have some observable objects at the data layer containing the order books. I could have implemented this with something like RxJS given more time, but in the interest of getting something done, I just invoke a callback each time an order book is modified.
+In a more complex application, it would be worth implementing an observable wrapper around the CombinedOrderBooks stored at the data layer or using a library like RxJs for server-side reactivity. Foxex uses callbacks registered with the Bittrex and Poloniex remote clients because it is a simple demo.
 
 ### Monitoring
-Currently I have reconnect logic in place if Bittrex or Poloniex return an error or are silent for too long, but I'd also like to implement monitoring so that a developer could be directly notified if there were an ongoing outage. A slack webhook would suffice.
+There is reconnect logic in place if Bittrex or Poloniex return an error or are silent for too long, but monitoring would be useful so that a developer could be directly notified if there were an ongoing outage. A slack webhook would suffice.
 
 ### Libraries
-The Bittrex client library I use is a work in progress, I would prefer to be using microsoft's official signalR client but time did not permit.
+The Bittrex client library used by Foxex is a work in progress. Given more time, Microsoft's official node signalR client would be a safer way to communicate with Bittrex's API.
