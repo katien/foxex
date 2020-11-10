@@ -4,23 +4,44 @@ import './App.css';
 import {OrderBook} from "./types/OrderBook";
 import OrderTable from "./orderbook/OrderTable";
 
-function App() {
-  const [orderBook, setOrderBook] = useState<OrderBook>();
-  useEffect(() => {
-    const socket = process.env.NODE_ENV === 'development' ? io("localhost:3000") : io();
-    socket.emit("subscribe", "BTC_ETH");
-    socket.on("orderBookLoaded", (orderBook: OrderBook) => {
-      setOrderBook(orderBook);
-    });
-  }, []);
+interface AppState {
+  currencyPair: string,
+  orderBook?: OrderBook
+}
 
-  return (
-    <div id="app">
-      <h1>Foxex</h1>
-      <OrderTable title="ask" entries={orderBook?.ask}/>
-      <OrderTable title="bid" entries={orderBook?.bid}/>
-    </div>
-  );
+class App extends React.Component<{}, AppState> {
+  socket: SocketIOClient.Socket
+
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      currencyPair: "BTC_ETH"
+    };
+
+    this.socket = process.env.NODE_ENV === 'development' ? io("localhost:3000") : io();
+    this.socket.on("orderBookLoaded", this.orderBookLoaded);
+  }
+
+  componentDidMount(): void {
+    // subscribe in componentDidMount instead of constructor so that orderBookLoaded doesn't call setState before the component is rendered
+    this.socket.emit("subscribe", this.state.currencyPair);
+  }
+
+  orderBookLoaded = (orderBook: OrderBook) => this.setState({orderBook});
+
+  render() {
+    return (
+      <div id="app">
+        <h1>Foxex</h1>
+        {/*<select value={this.state.currencyPair}>*/}
+        {/*  <option>BTC_ETH</option>*/}
+        {/*</select>*/}
+        <OrderTable title="ask" entries={this.state.orderBook?.ask}/>
+        <OrderTable title="bid" entries={this.state.orderBook?.bid}/>
+      </div>
+    );
+  }
+
 }
 
 export default App;
