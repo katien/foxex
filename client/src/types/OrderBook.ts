@@ -1,6 +1,6 @@
 export interface OrderBook {
-  bid: Totals;
-  ask: Totals;
+  bid: Totals[];
+  ask: Totals[];
 }
 
 export interface Totals {
