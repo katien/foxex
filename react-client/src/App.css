@@ -1,0 +1,42 @@
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+    font-size: 12px;
+}
+
+ul.table {
+    width: 100%;
+    max-width: 960px;
+    padding: 0;
+    display: table;
+    margin: 0 auto;
+}
+
+li.head {
+    display: table-header-group;
+    font-weight: bold;
+}
+
+li {
+    display: table-row;
+    list-style: none;
+}
+
+li:nth-of-type(2n) {
+    background: #ddd;
+}
+
+span {
+    width: 24%;
+    display: table-cell;
+}
+
+@media only screen and (max-width: 400px) {
+    span.bittrex, span.poloniex {
+        display: none;
+    }
+}
